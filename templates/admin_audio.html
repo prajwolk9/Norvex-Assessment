@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Song library</h2>
+<div class="panel">
+  <p class="muted">Songs are stored privately on the server under random names. They are never exposed as downloadable files — candidates only receive short-lived, session-bound streams while a question is playing.</p>
+  <form method="post" enctype="multipart/form-data"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <input type="file" name="files" multiple accept=".mp3,.wav,.m4a,.ogg,.flac" required>
+    <button class="btn">Upload</button>
+  </form>
+</div>
+<table>
+  <tr><th>Song</th><th>Size</th><th>Used by</th><th>Uploaded</th><th></th></tr>
+  {% for a in rows %}
+  <tr><td>{{ a['original'] }}</td><td>{{ '%.1f'|format(a['size'] / 1048576) }} MB</td><td>{{ a['used'] }} question(s)</td><td>{{ a['uploaded'] }}</td>
+    <td><button type="button" class="btn small ghost preview" data-id="{{ a['id'] }}">▶ Preview</button>
+      <form method="post" class="inline" data-confirm="Delete this song? It will be unassigned from all questions."><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="{{ a['id'] }}"><button class="link">Delete</button></form></td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='admin.js') }}"></script>{% endblock %}

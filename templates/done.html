@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel narrow center">
+  <h2>Thank you, {{ user['name'] }}!</h2>
+  <p>Your assessment was submitted on {{ user['submitted'] }} (UTC). Your answers have been recorded.</p>
+  {% if res %}<p class="big">Score: {{ '%.1f'|format(res[0]) }} / {{ '%.1f'|format(res[1]) }}</p>{% else %}<p class="muted">Results will be shared by the administrator.</p>{% endif %}
+</div>
+{% endblock %}

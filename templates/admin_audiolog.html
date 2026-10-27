@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Audio access log</h2>
+<p class="muted">Last 300 stream requests. Many requests from one user or unusual user agents (download tools) are worth investigating.</p>
+<table>
+  <tr><th>Time (UTC)</th><th>User</th><th>Question id</th><th>IP</th><th>Range</th><th>Status</th><th>User agent</th></tr>
+  {% for r in rows %}
+  <tr><td>{{ r['at'] }}</td><td>{{ r['email'] }}</td><td>{{ r['question_id'] }}</td><td>{{ r['ip'] }}</td><td class="mono">{{ r['range'] }}</td><td>{{ r['status'] }}</td><td class="mono">{{ r['ua'] }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

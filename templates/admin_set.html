@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<p><a href="{{ url_for('admin_sets') }}">← All sets</a></p>
+<h2>Set {{ n }} — assign songs</h2>
+{% if not lib %}<div class="flash err">No songs uploaded yet. <a href="{{ url_for('admin_audio') }}">Upload songs to the library first.</a></div>{% endif %}
+<form method="post"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+<table>
+  <tr><th>Q</th><th>Question</th><th>Song</th><th></th></tr>
+  {% for q in qs %}
+  <tr><td>{{ q['qid'] }}</td><td>{{ q['prompt'] }}</td>
+    <td><select name="a{{ q['id'] }}"><option value="">— no song —</option>
+      {% for a in lib %}<option value="{{ a['id'] }}" {% if a['id'] == q['audio_id'] %}selected{% endif %}>{{ a['original'] }}</option>{% endfor %}
+    </select></td>
+    <td><a href="{{ url_for('admin_question', qid=q['id']) }}">Key / limits</a></td></tr>
+  {% endfor %}
+</table>
+<p><button class="btn">Save song assignments</button></p>
+</form>
+{% endblock %}

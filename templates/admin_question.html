@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<p><a href="{{ url_for('admin_set', n=q['set_no']) }}">← Set {{ q['set_no'] }}</a></p>
+<h2>Set {{ q['set_no'] }} · {{ q['qid'] }}</h2>
+<p>{{ q['prompt'] }}</p>
+<form method="post" class="panel"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+  <label>Song
+    <select name="audio"><option value="">— no song —</option>
+    {% for a in lib %}<option value="{{ a['id'] }}" {% if a['id'] == q['audio_id'] %}selected{% endif %}>{{ a['original'] }}</option>{% endfor %}
+    </select></label>
+  <label>Max plays per candidate (blank = site default)<input type="number" name="max_plays" min="1" value="{{ q['max_plays'] or '' }}"></label>
+
+  <h3>Answer key</h3>
+  {% set t = q['qtype'] %}
+  {% if t == 'single' %}
+    <label><select name="key"><option value="">— not set —</option>
+      {% for o in jl(q['options'], []) %}<option {% if key == o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></label>
+  {% elif t == 'multi' %}
+    {% for o in jl(q['options'], []) %}<label><input type="checkbox" name="key" value="{{ o }}" {% if key and o in key %}checked{% endif %}> {{ o }}</label>{% endfor %}
+  {% elif t == 'fields' %}
+    {% for f in jl(q['cfg'], {})['fields'] %}
+      {% set fi = loop.index0 %}
+      <label>{{ f['label'] }}
+      {% if f['kind'] == 'select' %}<select name="key{{ fi }}"><option value="">—</option>{% for o in f['opts'] %}<option {% if key and key[fi] == o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select>
+      {% else %}<input name="key{{ fi }}" value="{{ key[fi] if key else '' }}">{% endif %}
+      </label>
+    {% endfor %}
+  {% elif t == 'time_mmss' %}
+    <label>Correct time (M:SS) <input name="key" value="{{ keytext }}" placeholder="0:44"></label>
+  {% elif t == 'time_sec' %}
+    <label>Correct time (seconds) <input name="key" value="{{ keytext }}"></label>
+  {% elif t == 'table' %}
+    <label>One section per line: <code>m:ss, name</code> (names: {{ jl(q['cfg'], {})['names']|join(', ') }})
+      <textarea name="key" placeholder="0:00, intro&#10;0:15, verse">{{ keytext }}</textarea></label>
+  {% elif t == 'chords' %}
+    <label>One chord per line, three parts separated by spaces: <code>root quality number</code> — e.g. <code>A min 7</code>, <code>F# sus 4</code>, <code>2 min 9</code>. Use <code>/</code> for an empty part.
+      <textarea name="key">{{ keytext }}</textarea></label>
+  {% endif %}
+
+  <h3>Points</h3>
+  <label>Points for the whole question (used for single / all-or-nothing / time questions)<input name="points" value="{{ q['points'] }}"></label>
+  <label>Points per item (used for multi “per correct”, tables, chords, per-field scoring)<input name="unit" value="{{ q['unit'] }}"></label>
+  <button class="btn">Save</button>
+</form>
+{% endblock %}

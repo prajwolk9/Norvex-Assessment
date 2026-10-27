@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Users</h2>
+<table>
+  <tr><th>Name</th><th>Email</th><th>Role</th><th>Set</th><th>Started</th><th>Submitted</th><th></th></tr>
+  {% for u in rows %}
+  <tr><td>{{ u['name'] }}</td><td>{{ u['email'] }}</td><td>{{ u['role'] }}</td>
+    <td>{{ u['set_no'] or '— (none)' }}</td><td>{{ u['started'] or '' }}</td><td>{{ u['submitted'] or '' }}</td>
+    <td><a href="{{ url_for('admin_user', uid=u['id']) }}">Open</a></td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

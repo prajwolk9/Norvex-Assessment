@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<h2>Dashboard</h2>
+<div class="stats">
+  <div class="stat"><b>{{ stats.users }}</b>Candidates</div>
+  <div class="stat"><b>{{ stats.submitted }}</b>Submitted</div>
+  <div class="stat"><b>{{ stats.audio }}</b>Songs uploaded</div>
+</div>
+<div class="panel">
+  <h3>Sets overview</h3>
+  <table>
+    <tr><th>Set</th><th>Candidates assigned</th><th>Questions with a song</th><th></th></tr>
+    {% for n in range(1, 11) %}
+    <tr><td>Set {{ n }}</td><td>{{ dist.get(n, 0) }}</td>
+      <td>{{ cover[n][0] or 0 }} / {{ cover[n][1] }}</td>
+      <td><a href="{{ url_for('admin_set', n=n) }}">Manage songs &amp; answer keys →</a></td></tr>
+    {% endfor %}
+  </table>
+</div>
+<p><a class="btn ghost" href="{{ url_for('admin_export') }}">Download results (CSV)</a>
+   <a class="btn ghost" href="{{ url_for('admin_audiolog') }}">Audio access log</a></p>
+{% endblock %}

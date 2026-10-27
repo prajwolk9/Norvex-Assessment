@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Question sets &amp; songs</h2>
+<table>
+  <tr><th>Set</th><th>Songs assigned</th><th>Answer keys set</th><th></th></tr>
+  {% for r in cover %}
+  <tr><td>Set {{ r['set_no'] }}</td><td>{{ r['a'] or 0 }} / {{ r['t'] }}</td><td>{{ r['k'] or 0 }} / {{ r['t'] }}</td>
+    <td><a href="{{ url_for('admin_set', n=r['set_no']) }}">Open →</a></td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

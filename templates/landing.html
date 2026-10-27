@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Music Ability Assessment</h1>
+  <p>Test your listening skills across five levels — from emotional impression and timbre to chord progressions and production techniques.</p>
+  <div class="cta">
+    <a class="btn" href="{{ url_for('signup') }}">Sign up to take the test</a>
+    <a class="btn ghost" href="{{ url_for('login') }}">I already have an account</a>
+  </div>
+</section>
+<section class="cards">
+  <div class="card"><h3>One set per candidate</h3><p>You are automatically assigned one question set when you register. It stays the same every time you log in.</p></div>
+  <div class="card"><h3>Listen &amp; answer</h3><p>Audio plays inside the page. Use headphones in a quiet room. Each excerpt has a limited number of plays.</p></div>
+  <div class="card"><h3>Autosave</h3><p>Your answers are saved as you go, so you can continue if your connection drops. Submit when you are done.</p></div>
+</section>
+{% endblock %}

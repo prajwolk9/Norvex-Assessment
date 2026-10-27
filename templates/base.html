@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf" content="{{ csrf_token() }}">
+<title>{% block title %}Music Ability Assessment{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% block bodyclass %}{% endblock %}">
+<header class="top">
+  <a class="brand" href="{{ url_for('landing') }}">♪ Music Ability Assessment</a>
+  <nav>
+  {% if session.get('uid') %}
+    {% set u = current_user() %}
+    {% if u and u['role'] == 'admin' %}
+      <a href="{{ url_for('admin_home') }}">Dashboard</a>
+      <a href="{{ url_for('admin_sets') }}">Sets &amp; songs</a>
+      <a href="{{ url_for('admin_audio') }}">Song library</a>
+      <a href="{{ url_for('admin_users') }}">Users</a>
+      <a href="{{ url_for('admin_admins') }}">Admins</a>
+      <a href="{{ url_for('admin_settings') }}">Settings</a>
+    {% endif %}
+    <form method="post" action="{{ url_for('logout') }}" class="inline">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <button class="link">Log out{% if u %} ({{ u['name'] }}){% endif %}</button>
+    </form>
+  {% else %}
+    <a href="{{ url_for('login') }}">Log in</a>
+    <a class="btn small" href="{{ url_for('signup') }}">Sign up</a>
+  {% endif %}
+  </nav>
+</header>
+<main>
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>
